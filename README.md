@@ -125,4 +125,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Feel free to expand this README as your app evolves or additional features are added. Let me know if you need any more details!
+Feel free to expand this README as your app evolves or additional features are added. Let me know if you need any more details!# ReactNativeBirthdayCard
