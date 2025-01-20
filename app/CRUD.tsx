@@ -1,33 +1,67 @@
-import React, { useState } from 'react';
-import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
-import { useCardContext } from '../CardContext';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  Button,
+} from "react-native";
+import { useCardContext } from "../CardContext";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const CRUD: React.FC = () => {
   const { savedCards, removeCard, updateCard } = useCardContext();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentCard, setCurrentCard] = useState<{ text: string; image: string | null } | null>(null);
-  const [editedCardText, setEditedCardText] = useState<string>('');
+  const [currentCard, setCurrentCard] = useState<{
+    text: string;
+    image: string | null;
+  } | null>(null);
+  const [editedCardText, setEditedCardText] = useState<string>("");
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   // Render each card in the list
-  const renderItem = ({ item, index }: { item: { text: string; image: string | null }; index: number }) => (
-    <View style={styles.card}>
-      <Text style={styles.cardText}>{item.text}</Text>
-      {item.image && <Image source={{ uri: item.image }} style={styles.cardImage} />}
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.iconButton} onPress={() => handleViewCard(item)}>
-          <Icon name="eye" size={30} color="#2196F3" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={() => handleEditCard(item, index)}>
-          <Icon name="pencil" size={30} color="#FF9800" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={() => handleDeleteCard(index)}>
-          <Icon name="trash-can" size={30} color="#F44336" />
-        </TouchableOpacity>
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: { text: string; image: string | null };
+    index: number;
+  }) => {
+    console.log({ item });
+
+    return (
+      <View style={styles.card}>
+        <Text style={styles.cardText}>{item.text}</Text>
+        {item.image && (
+          <Image source={{ uri: item.image }} style={styles.cardImage} />
+        )}
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => handleViewCard(item)}
+          >
+            <Icon name="eye" size={30} color="#2196F3" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => handleEditCard(item, index)}
+          >
+            <Icon name="pencil" size={30} color="#FF9800" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => handleDeleteCard(index)}
+          >
+            <Icon name="trash-can" size={30} color="#F44336" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   // View card details
   const handleViewCard = (card: { text: string; image: string | null }) => {
@@ -37,7 +71,10 @@ const CRUD: React.FC = () => {
   };
 
   // Edit card details
-  const handleEditCard = (card: { text: string; image: string | null }, index: number) => {
+  const handleEditCard = (
+    card: { text: string; image: string | null },
+    index: number
+  ) => {
     setEditedCardText(card.text);
     setCurrentCard(card);
     setEditIndex(index);
@@ -66,13 +103,15 @@ const CRUD: React.FC = () => {
     setIsModalVisible(false);
     setCurrentCard(null);
     setEditIndex(null);
-    setEditedCardText('');
+    setEditedCardText("");
   };
 
   if (savedCards.length === 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.emptyStateText}>No saved cards yet. Create a card to get started!</Text>
+        <Text style={styles.emptyStateText}>
+          No saved cards yet. Create a card to get started!
+        </Text>
       </View>
     );
   }
@@ -85,15 +124,26 @@ const CRUD: React.FC = () => {
         renderItem={renderItem}
         keyExtractor={(_, index) => index.toString()}
         extraData={savedCards}
-        ListEmptyComponent={<Text style={styles.emptyStateText}>No cards available</Text>}
+        ListEmptyComponent={
+          <Text style={styles.emptyStateText}>No cards available</Text>
+        }
       />
-      <Modal visible={isModalVisible} onRequestClose={closeModal} animationType="slide">
+      <Modal
+        visible={isModalVisible}
+        onRequestClose={closeModal}
+        animationType="slide"
+      >
         <View style={styles.modalContainer}>
           {editIndex === null ? (
             <>
               <Text style={styles.modalHeader}>View Card</Text>
               <Text style={styles.modalText}>{currentCard?.text}</Text>
-              {currentCard?.image && <Image source={{ uri: currentCard.image }} style={styles.cardImage} />}
+              {currentCard?.image && (
+                <Image
+                  source={{ uri: currentCard.image }}
+                  style={styles.cardImage}
+                />
+              )}
             </>
           ) : (
             <>
@@ -117,16 +167,16 @@ const CRUD: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     flex: 1,
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   card: {
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     padding: 10,
     marginVertical: 10,
@@ -137,32 +187,33 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   cardImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
     marginTop: 10,
     borderRadius: 8,
   },
   emptyStateText: {
     fontSize: 18,
-    color: '#777',
-    textAlign: 'center',
+    color: "#777",
+    textAlign: "center",
     marginTop: 20,
   },
   buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   iconButton: {
-    padding: 5,
+    padding: 10,
+    backgroundColor: "#BDBDBD",
   },
   modalContainer: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     flex: 1,
   },
   modalHeader: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 15,
   },
   modalText: {
@@ -171,7 +222,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderWidth: 1,
     paddingLeft: 8,
     marginBottom: 10,
